@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Application.Model;
 using UserService.Application.Users.CreateUser;
@@ -12,6 +13,7 @@ namespace UserService.Presentation.Controllers;
 public class UserController(IMediator mediator) : ApiControllerBase(mediator)
 {
     [HttpGet]
+    [Authorize(Policy = "Admin")]
     public async Task<IActionResult> GetAll()
     {
         var result = await mediator.Send(new GetAllUsersQuery());
@@ -21,6 +23,7 @@ public class UserController(IMediator mediator) : ApiControllerBase(mediator)
     }
     
     [HttpGet("{id}")]
+    [Authorize(Policy = "Admin")]
     public async Task<IActionResult> GetById(int id)
     {
         var result = await mediator.Send(new GetUserByIdQuery(id));
@@ -30,6 +33,7 @@ public class UserController(IMediator mediator) : ApiControllerBase(mediator)
     }
    
     [HttpPost]
+    [Authorize(Policy = "Admin")]
     public async Task<IActionResult> CreateAdmin([FromBody] CreateUser model)
     {
         var result = await mediator.Send(new CreateUserCommand(model.Name, model.Email, model.Password));
@@ -39,6 +43,7 @@ public class UserController(IMediator mediator) : ApiControllerBase(mediator)
     }
     
     [HttpPut ("{id}")]
+    [Authorize(Policy = "AdminOrUser")]
     public async Task<IActionResult> Update([FromBody] UpdateUser model)
     {
         var result = await mediator.Send(new UpdateUserCommand(model.Id,model.Name));
@@ -48,6 +53,7 @@ public class UserController(IMediator mediator) : ApiControllerBase(mediator)
     }
     
     [HttpDelete ("{id}")]
+    [Authorize(Policy = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var result = await mediator.Send(new DeleteUserCommand(id));
