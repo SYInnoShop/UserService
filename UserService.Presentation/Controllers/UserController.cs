@@ -14,9 +14,9 @@ public class UserController(IMediator mediator) : ApiControllerBase(mediator)
 {
     [HttpGet]
     [Authorize(Policy = "Admin")]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetAllUsersQuery());
+        var result = await mediator.Send(new GetAllUsersQuery(), cancellationToken);
         return result.Match(
             users => Ok(users),
             errors => Problem(errors.First().Description));
@@ -24,9 +24,9 @@ public class UserController(IMediator mediator) : ApiControllerBase(mediator)
     
     [HttpGet("{id}")]
     [Authorize(Policy = "Admin")]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetUserByIdQuery(id));
+        var result = await mediator.Send(new GetUserByIdQuery(id), cancellationToken);
         return result.Match(
             user => Ok(user),
             errors => Problem(errors.First().Description));
@@ -34,9 +34,9 @@ public class UserController(IMediator mediator) : ApiControllerBase(mediator)
    
     [HttpPost]
     [Authorize(Policy = "Admin")]
-    public async Task<IActionResult> CreateAdmin([FromBody] CreateUser model)
+    public async Task<IActionResult> CreateAdmin([FromBody] CreateUser model, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new CreateUserCommand(model.Name, model.Email, model.Password));
+        var result = await mediator.Send(new CreateUserCommand(model.Name, model.Email, model.Password), cancellationToken);
         return result.Match(
             user => Ok(user),
             errors => Problem(errors.First().Description));
@@ -44,9 +44,9 @@ public class UserController(IMediator mediator) : ApiControllerBase(mediator)
     
     [HttpPut ("{id}")]
     [Authorize(Policy = "AdminOrUser")]
-    public async Task<IActionResult> Update([FromBody] UpdateUser model)
+    public async Task<IActionResult> Update([FromBody] UpdateUser model, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new UpdateUserCommand(model.Id,model.Name));
+        var result = await mediator.Send(new UpdateUserCommand(model.Id,model.Name), cancellationToken);
         return result.Match(
             success => Ok(success),
             errors => Problem(errors.First().Description));
@@ -54,9 +54,9 @@ public class UserController(IMediator mediator) : ApiControllerBase(mediator)
     
     [HttpDelete ("{id}")]
     [Authorize(Policy = "Admin")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new DeleteUserCommand(id));
+        var result = await mediator.Send(new DeleteUserCommand(id), cancellationToken);
         return result.Match(
             success => Ok(success),
             errors => Problem(errors.First().Description));
