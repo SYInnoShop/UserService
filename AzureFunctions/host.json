@@ -2,7 +2,7 @@
     "version": "2.0",
     "extensions": {
         "serviceBus": {
-            "prefetchCount": 4,
+            "prefetchCount": 6,
             "messageHandlerOptions": {
                 "autoComplete": true,
                 "maxConcurrentCalls": 2,
