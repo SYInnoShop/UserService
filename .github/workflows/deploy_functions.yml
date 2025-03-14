@@ -27,8 +27,7 @@ jobs:
 
       - name: Publish All Functions
         run: |
-          dotnet publish ProcessServiceBusMessageFunction --configuration Release --output ./publish
-          dotnet publish ProcessUserDataFunction --configuration Release --output ./publish
+          dotnet publish ./AzureFunctions.csproj --configuration Release --output ./publish
         shell: pwsh
 
       - name: Deploy to Azure Function App
